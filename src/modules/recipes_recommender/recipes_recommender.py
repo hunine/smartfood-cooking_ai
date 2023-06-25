@@ -53,13 +53,9 @@ class RecipeRecommender:
         )
 
         # Get indices of top 10 similar recipes
-<<<<<<< HEAD
         similar_recipes = similarities.argsort()[0][::-1][
             : top_k + len(user_recipe_ids)
         ]
-=======
-        similar_recipes = similarities.argsort()[0][::-1][:top_k + len(user_recipe_ids)]
->>>>>>> 226daa8 (SMF-61: Recommender System)
 
         # Remove user's own recipes from recommendations
         recommendations = set(similar_recipes) - set(user_recipe_ids)
@@ -86,7 +82,6 @@ class RecipeRecommender:
                 continue
             user_recipe_ids.append(match[0])
 
-<<<<<<< HEAD
         return [
             user_recipe_ids,
             self.recipe_features.iloc[user_recipe_ids].mean(axis=0),
@@ -96,12 +91,6 @@ class RecipeRecommender:
         [user_recipe_ids, user_feature_vector] = self.__get_user_feature_vector(
             user_recipes
         )
-=======
-        return [user_recipe_ids, self.recipe_features.iloc[user_recipe_ids].mean(axis=0)]
-
-    def get_recommendations(self, user_recipes):
-        [user_recipe_ids, user_feature_vector] = self.__get_user_feature_vector(user_recipes)
->>>>>>> 226daa8 (SMF-61: Recommender System)
         recommended_recipes = self.__get_recommendations(
             user_recipe_ids, user_feature_vector
         )
