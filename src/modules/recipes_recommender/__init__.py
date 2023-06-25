@@ -1,0 +1,1 @@
+from .recipes_recommender import RecipeRecommender
