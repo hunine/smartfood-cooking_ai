@@ -1,19 +1,16 @@
-import redis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from pydantic import BaseModel
+from src.modules.recipes import Recipe
 from src.modules.recipes_recommender import RecipeRecommender
-from src.config.env import REDIS
+from src.config.redis import RedisConfig
+from src.config.database import DatabaseHelper
 
-rd = redis.Redis(
-    host=REDIS.get("HOST"),
-    port=REDIS.get("PORT"),
-    username=REDIS.get("USERNAME"),
-    password=REDIS.get("PASSWORD"),
-)
 
+rd = RedisConfig().redis_config
 app = FastAPI()
+db_conn = DatabaseHelper().conn
 
 origins = [
     "http://localhost:3000",
@@ -30,6 +27,7 @@ app.add_middleware(
 
 # Create RecipeRecommender object
 recommender = RecipeRecommender()
+recipe = Recipe(db_conn)
 
 
 class RecipeNames(BaseModel):
@@ -44,6 +42,7 @@ async def recommend(requestBody: RecipeNames):
     return data
 
 
-@app.post("/recommend/train", tags=["recommend"])
+@app.post("/recommend/training", tags=["recommend"])
 async def training():
-    pass
+    recipe.save_recipes_csv()
+    return {"status": 200, "message": "Training completed"}
