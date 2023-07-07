@@ -1,8 +1,17 @@
+import redis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from pydantic import BaseModel
 from src.modules.recipes_recommender import RecipeRecommender
+from src.config.env import REDIS
+
+rd = redis.Redis(
+    host=REDIS.get("HOST"),
+    port=REDIS.get("PORT"),
+    username=REDIS.get("USERNAME"),
+    password=REDIS.get("PASSWORD"),
+)
 
 app = FastAPI()
 
