@@ -8,14 +8,18 @@ class RecipeRecommender:
     def __init__(self):
         cwd = os.getcwd()
         ref_path = "src/files/"
-        file_path = os.path.join(cwd, ref_path)
-        self.recipes = pd.read_csv(file_path + "recipes.csv").dropna()
+        self.file_path = os.path.join(cwd, ref_path)
+        self.recipes = pd.read_csv(self.file_path + "recipes.csv").dropna()
 
-        if os.path.isfile(file_path + "recipe_features.csv"):
-            self.recipe_features = pd.read_csv(file_path + "recipe_features.csv")
+        if os.path.isfile(self.file_path + "recipe_features.csv"):
+            self.recipe_features = pd.read_csv(self.file_path + "recipe_features.csv")
         else:
             self.recipe_features = self.__get_recipe_features()
-            self.recipe_features.to_csv(file_path + "recipe_features.csv", index=False)
+            self.recipe_features.to_csv(self.file_path + "recipe_features.csv", index=False)
+
+    def create_recipes_features(self):
+        self.recipe_features = self.__get_recipe_features()
+        self.recipe_features.to_csv(self.file_path + "recipe_features.csv", index=False)
 
     def __get_recipe_features(self):
         self.recipes.columns[self.recipes.isna().any()].tolist()

@@ -3,3 +3,4 @@
 
 # Environment
 /venv
+.env

@@ -44,5 +44,10 @@ async def recommend(requestBody: RecipeNames):
 
 @app.post("/recommend/training", tags=["recommend"])
 async def training():
-    recipe.save_recipes_csv()
-    return {"status": 200, "message": "Training completed"}
+    isUpdated = recipe.save_recipes_csv()
+
+    if isUpdated:
+        recommender.create_recipes_features()
+        return {"status": 200, "message": "Training completed"}
+
+    return {"status": 500, "message": "Training failed"}

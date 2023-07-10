@@ -28,10 +28,14 @@ class Recipe:
         return df_grouped
 
     def save_recipes_csv(self):
-        df_grouped = self.__get_dataframe_recipes()
+        try:
+            df_grouped = self.__get_dataframe_recipes()
 
-        cwd = os.getcwd()
-        ref_path = "src/files/"
-        file_path = os.path.join(cwd, ref_path)
-        df_grouped.to_csv(file_path + "recipes.csv", index=False)
-        os.remove(file_path + "recipe_features.csv")
+            cwd = os.getcwd()
+            ref_path = "src/files/"
+            file_path = os.path.join(cwd, ref_path)
+            df_grouped.to_csv(file_path + "recipes.csv", index=False)
+            os.remove(file_path + "recipe_features.csv")
+            return True
+        except:
+            return False
