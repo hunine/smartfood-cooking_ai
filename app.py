@@ -40,14 +40,20 @@ class RecipeNames(BaseModel):
 
 @app.post("/recommend", tags=["recommend"])
 async def recommend(requestBody: RecipeNames):
-    recipes = requestBody.user_recipes
-    key = str(RedisPrefix.RECOMMENDER_RECIPES.value) + requestBody.user_email
+    try :
+        recipes = requestBody.user_recipes
+        key = str(RedisPrefix.RECOMMENDER_RECIPES.value) + requestBody.user_email
 
-    data = recommender.get_recommendations(recipes)
-    rd.set(key, json.dumps(data))
-    rd.expire(key, REDIS.get("REDIS_TTL"))
+        data = recommender.get_recommendations(recipes)  or []
 
-    return data
+        print(data)
+
+        rd.set(key, json.dumps(data))
+        rd.expire(key, REDIS.get("REDIS_TTL"))
+
+        return data
+    except:
+        return
 
 
 @app.post("/recommend/training", tags=["recommend"])
