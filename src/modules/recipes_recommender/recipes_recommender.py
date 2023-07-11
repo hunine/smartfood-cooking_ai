@@ -9,7 +9,8 @@ class RecipeRecommender:
         cwd = os.getcwd()
         ref_path = "src/files/"
         self.file_path = os.path.join(cwd, ref_path)
-        self.recipes = pd.read_csv(self.file_path + "recipes.csv").dropna()
+        if os.path.isfile(self.file_path + "recipes.csv"):
+            self.recipes = pd.read_csv(self.file_path + "recipes.csv").dropna()
 
         if os.path.isfile(self.file_path + "recipe_features.csv"):
             self.recipe_features = pd.read_csv(self.file_path + "recipe_features.csv")

@@ -9,4 +9,5 @@ class RedisConfig:
             port=REDIS.get("PORT"),
             username=REDIS.get("USERNAME"),
             password=REDIS.get("PASSWORD"),
+            db=0,
         )

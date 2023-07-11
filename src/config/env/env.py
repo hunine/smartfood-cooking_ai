@@ -8,6 +8,7 @@ REDIS = {
     "PORT": os.getenv("REDIS_PORT"),
     "USERNAME": os.getenv("REDIS_USERNAME"),
     "PASSWORD": os.getenv("REDIS_PASSWORD"),
+    "REDIS_TTL": os.getenv("REDIS_TTL"),
 }
 
 DATABASE_CONFIG = {

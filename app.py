@@ -1,3 +1,4 @@
+import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
@@ -6,6 +7,8 @@ from src.modules.recipes import Recipe
 from src.modules.recipes_recommender import RecipeRecommender
 from src.config.redis import RedisConfig
 from src.config.database import DatabaseHelper
+from src.common.enum import RedisPrefix
+from src.config.env import REDIS
 
 
 rd = RedisConfig().redis_config
@@ -31,14 +34,19 @@ recipe = Recipe(db_conn)
 
 
 class RecipeNames(BaseModel):
+    user_email: str
     user_recipes: Optional[List[str]]
 
 
 @app.post("/recommend", tags=["recommend"])
 async def recommend(requestBody: RecipeNames):
     recipes = requestBody.user_recipes
+    key = str(RedisPrefix.RECOMMENDER_RECIPES.value) + requestBody.user_email
 
     data = recommender.get_recommendations(recipes)
+    rd.set(key, json.dumps(data))
+    rd.expire(key, REDIS.get("REDIS_TTL"))
+
     return data
 
 

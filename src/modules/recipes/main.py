@@ -7,7 +7,23 @@ class Recipe:
         self.db_conn = conn
 
     def __get_dataframe_recipes(self):
-        query = f"SELECT recipes.id, recipes.name as name, ingredients.name as ingredients, levels.name as level, cuisine.name as cuisine, categories.name as category FROM recipes LEFT JOIN quantification ON recipes.id = quantification.recipe_id LEFT JOIN ingredients ON quantification.ingredient_id = ingredients.id LEFT JOIN levels ON recipes.level_id = levels.id LEFT JOIN cuisine ON recipes.cuisine_id = cuisine.id LEFT JOIN categories ON recipes.category_id = categories.id"
+        query = f"""SELECT recipes.id,
+            recipes.name as name,
+            ingredients.name as ingredients,
+            levels.name as level,
+            cuisine.name as cuisine,
+            categories.name as category
+            FROM recipes
+            LEFT JOIN quantification ON recipes.id = quantification.recipe_id
+            LEFT JOIN ingredients ON quantification.ingredient_id = ingredients.id
+            LEFT JOIN levels ON recipes.level_id = levels.id
+            LEFT JOIN cuisine ON recipes.cuisine_id = cuisine.id
+            LEFT JOIN categories ON recipes.category_id = categories.id
+            WHERE recipes.deleted_at IS NULL
+            AND ingredients.deleted_at IS NULL
+            AND levels.deleted_at IS NULL
+            AND cuisine.deleted_at IS NULL
+            AND categories.deleted_at IS NULL"""
 
         df = pd.read_sql_query(query, self.db_conn)
         df_clean = df.dropna()
